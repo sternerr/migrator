@@ -1,14 +1,18 @@
 import fs from "fs";
 import path from "path";
 import pg from "pg";
-import parseSqlStatements from "./core/parser/parser.mts";
-import { error } from "console";
+import parseSqlStatements from "./core/parser/parser";
 
 const MIGRATIONS_DIR = path.join(process.cwd(), "migrations");
 
 async function main() {
     const file: string = process.argv[2];
     const connectionString: string = process.argv[3];
+
+    if(!file || !connectionString) {
+        console.log("Error: please write migrator <file> <connectionstring>")
+        return;
+    }
 
     const client: pg.Client = new pg.Client({
         connectionString

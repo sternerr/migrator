@@ -6,6 +6,7 @@ A Node.js CLI tool to run SQL migrations.
 git clone https://github.com/sternerr/migrator
 cd migrator
 pnpm install
+pnpm run build
 pnpm link --global
 migrator file.sql postgresql://username:password@host:port/dbname
 ```

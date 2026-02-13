@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --import=tsx src/index.ts",
-    "dev:watch": "node --watch --import=tsx src/index.ts"
+    "dev:watch": "node --watch --import=tsx src/index.ts",
+    "build": "pnpm exec tsc"
   },
   "keywords": [],
   "author": "",
@@ -14,10 +15,13 @@
   "packageManager": "pnpm@10.29.3",
   "devDependencies": {
     "@types/node": "^25.2.3",
-    "tsx": "^4.21.0",
+    "@types/pg": "^8.16.0",
     "typescript": "^5.9.3"
   },
   "bin": {
-    "migrator": "./src/index.ts"
+    "migrator": "./dist/index.js"
+  },
+  "dependencies": {
+    "pg": "^8.18.0"
   }
 }
