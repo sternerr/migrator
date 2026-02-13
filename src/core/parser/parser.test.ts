@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
 
-import parseSqlStatements from "./parser";
+import parseSqlStatements from "./parser.js";
 
 describe("sql parser", () => {
     it("sql statemets", () => {
