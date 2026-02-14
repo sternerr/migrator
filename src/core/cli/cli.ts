@@ -1,46 +1,47 @@
-import fs from "fs";
 import path from "path";
-import pg from "pg";
+import { parseArguments } from "./parseArguments.js";
+import Command from "./command";
 
-import parseSqlStatements from "../parser/parser.js";
 
 export default class CLI {
     private args: string[];
     private migrationDir: string;
+    private commands: Command[] = [];
 
     constructor(args: string[], migrationDir: string = "/migrations") {
         this.args = args.slice(2);
         this.migrationDir = path.join(process.cwd(), migrationDir)
     }
 
-    async run() {
-        const [file, connectionString] = this.args;
+    registerCommand(name: string, description: string) {
+        const newCommand = new Command(name, description);
+        this.commands.push(newCommand);
+        return newCommand
+    }
 
-        if (!file || !connectionString) {
-            this.help();
-            return;
+    run() {
+        const parsedArgs = parseArguments(this.args);
+        let command: Command;
+
+        for(const cmd of this.commands) {
+            if(cmd.getName.toLowerCase() == parsedArgs.subcommand.toLowerCase()) {
+                command = cmd;
+                break;
+            }
         }
 
-        const client = new pg.Client({ connectionString });
-
-        try {
-            await client.connect();
-
-            const buffer = fs.readFileSync(path.join(this.migrationDir, file));
-            const stmts = parseSqlStatements(buffer);
-
-            for (const s of stmts) {
-                console.log(s);
-                await client.query(s);
-            }
-        } catch (err) {
-            console.error("Migration failed:", err);
-        } finally {
-            await client.end();
+        if(command) {
+            command.execute();
+        } else {
+            this.help();
         }
     }
 
     private help() {
-        console.log("Usage: <file> <connectionstring>");
+        console.log("Usage: <SUBCOMMAND> [OPTIONS]\n");
+        console.log("Commands");
+        for(const cmd of this.commands) {
+            console.log(`${cmd.getName}\t${cmd.getDescription}`)
+        }
     }
 }
