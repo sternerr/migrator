@@ -1,16 +1,14 @@
-import path from "path";
-import { parseArguments } from "./parseArguments.js";
+import { parseArguments } from "./parseArguments";
 import Command from "./command";
 
 
 export default class CLI {
     private args: string[];
-    private migrationDir: string;
     private commands: Command[] = [];
 
-    constructor(args: string[], migrationDir: string = "/migrations") {
+    constructor(args: string[]) {
         this.args = args.slice(2);
-        this.migrationDir = path.join(process.cwd(), migrationDir)
+       
     }
 
     registerCommand(name: string, description: string) {
