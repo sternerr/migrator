@@ -28,11 +28,13 @@ export default class CLI {
             }
         }
 
-        if(command) {
-            command.execute();
-        } else {
+        if(!command) {
             this.help();
+            return
         }
+        
+        command.setOptions(parsedArgs);
+        command.execute();
     }
 
     private help() {

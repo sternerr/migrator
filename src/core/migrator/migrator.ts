@@ -6,15 +6,17 @@ export default class Migrator {
 
     constructor() {}
 
-    create() {
+    create(args: any) {
         try {
             const stat = fs.lstatSync(this.migrationDir);
         } catch(error) {
             fs.mkdirSync(this.migrationDir);
         }
 
+        console.log(args);
+
         const timestamp = Date.now();
-        const filename = `${timestamp}.sql`;
+        const filename = `${timestamp}${args["--filename"].value ? "_" + args["--filename"].value : ""}.sql`;
         const filepath = path.join(this.migrationDir, filename);
 
         fs.writeFileSync(filepath, "");
